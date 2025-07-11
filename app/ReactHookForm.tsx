@@ -30,6 +30,19 @@ const formFields = [
     ],
   },
   {
+    name: "select2",
+    label: "Select (pre selected)",
+    required: true,
+    type: "Select",
+    value: "select2",
+    options: [
+      { value: undefined, label: "" },
+      { value: "select1", label: "Select 1" },
+      { value: "select2", label: "Select 2" },
+      { value: "select3", label: "Select 3" },
+    ],
+  },
+  {
     name: "combobox",
     label: "Combo Box",
     required: true,
@@ -45,11 +58,14 @@ const formFields = [
 
 export default function ReactHookForm() {
   const [submittedData, setSubmittedData] = useState(null);
+  const defaultValues = Object.fromEntries(
+    formFields.map(({ name, value }) => [name, value ?? ""]),
+  );
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues });
 
   const onSubmit = (data) => {
     console.log("Form data:", data);
@@ -64,8 +80,6 @@ export default function ReactHookForm() {
       errors[name]?.message && typeof errors[name]?.message === "string"
         ? errors[name]?.message
         : "This field is required";
-
-    console.log(errors[name]?.message);
 
     switch (type) {
       case "Select":
